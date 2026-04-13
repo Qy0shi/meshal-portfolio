@@ -1,33 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import dynamic from "next/dynamic";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
-import { ThemeProvider } from "@/components/ui/theme-provider";
-import Navigation from "@/components/ui/navigation";
 import "./globals.css";
 
-const VantaBackground = dynamic(
-  () => import("@/components/VantaBackground"),
-  { ssr: false }
-);
-
 export const metadata: Metadata = {
-  title: "meshal.portfolio · Mohaiminul Islam Meshal",
-  description:
-    "Sales professional & photographer from Dhaka, Bangladesh. Building relationships, capturing moments.",
+  title: "meshal.pf · Mohaiminul Islam Meshal",
+  description: "Sales professional & photographer from Dhaka, Bangladesh.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   openGraph: {
-    title: "meshal.portfolio",
+    title: "meshal.pf",
     description: "Sales professional & photographer from Dhaka, Bangladesh.",
     type: "website",
-    locale: "en_US",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "meshal.portfolio",
-    description: "Sales professional & photographer from Dhaka, Bangladesh.",
-  },
-  alternates: { canonical: "/" },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -38,30 +20,18 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#06141B",
+  themeColor: "#080808",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
-      data-theme="dark"
-      suppressHydrationWarning
-    >
-      <body style={{ fontFamily: "var(--font-geist-sans), -apple-system, 'SF Pro Display', BlinkMacSystemFont, system-ui, sans-serif" }}>
-        <ThemeProvider>
-          <VantaBackground />
-          <div style={{ position: "relative", zIndex: 1 }}>
-            {children}
-          </div>
-          <Navigation />
-        </ThemeProvider>
-      </body>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }

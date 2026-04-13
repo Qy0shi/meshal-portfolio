@@ -22,13 +22,45 @@ interface Photo {
   category: string;
 }
 
+function SkillTag({ label }: { label: string }) {
+  return (
+    <span
+      style={{
+        fontSize: 9,
+        padding: "3px 8px",
+        border: "1px solid rgba(255,255,255,0.1)",
+        color: "rgba(232,228,220,0.55)",
+        background: "rgba(255,255,255,0.03)",
+        fontFamily: "'Courier Prime', monospace",
+      }}
+    >
+      {label}
+    </span>
+  );
+}
+
+function LogEntry({ tag, year, desc }: { tag: string; year: string; desc: string }) {
+  return (
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: "#e05a4b", border: "1px solid rgba(224,90,75,0.4)", padding: "1px 6px" }}>
+          {tag}
+        </span>
+        <span style={{ fontSize: 9, padding: "1px 6px", background: "rgba(255,255,255,0.08)", color: "rgba(232,228,220,0.5)" }}>
+          {year}
+        </span>
+      </div>
+      <div style={{ fontSize: 11, color: "rgba(232,228,220,0.65)", lineHeight: 1.5 }}>{desc}</div>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const [greetIndex, setGreetIndex] = useState(0);
   const [greetVisible, setGreetVisible] = useState(true);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const cursorRef = useRef<HTMLDivElement>(null);
 
-  // Greeting cycle
   useEffect(() => {
     const interval = setInterval(() => {
       setGreetVisible(false);
@@ -40,16 +72,13 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Custom cursor
   useEffect(() => {
     const cursor = cursorRef.current;
     if (!cursor) return;
-
     const onMove = (e: MouseEvent) => {
       cursor.style.left = e.clientX + "px";
       cursor.style.top = e.clientY + "px";
     };
-
     const onOver = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
       if (t.closest("a, button")) {
@@ -62,7 +91,6 @@ export default function HomePage() {
         cursor.classList.remove("link-hover", "text-hover");
       }
     };
-
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseover", onOver);
     return () => {
@@ -71,7 +99,6 @@ export default function HomePage() {
     };
   }, []);
 
-  // Scroll reveal
   useEffect(() => {
     const obs = new IntersectionObserver(
       (entries) =>
@@ -87,7 +114,6 @@ export default function HomePage() {
     return () => obs.disconnect();
   }, []);
 
-  // Fetch gallery thumbnails
   useEffect(() => {
     fetch("/api/gallery")
       .then((r) => r.json())
@@ -95,48 +121,15 @@ export default function HomePage() {
       .catch(() => {});
   }, []);
 
-  const skill = (label: string) => (
-    <span
-      key={label}
-      style={{
-        fontSize: 9,
-        padding: "3px 8px",
-        border: "1px solid rgba(255,255,255,0.1)",
-        color: "rgba(232,228,220,0.55)",
-        background: "rgba(255,255,255,0.03)",
-        fontFamily: "'Courier Prime', monospace",
-      }}
-    >
-      {label}
-    </span>
-  );
-
-  const entry = (tag: string, year: string, desc: string) => (
-    <div key={tag} style={{ marginBottom: 12 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-        <span style={{ fontSize: 10, fontWeight: 700, color: "#e05a4b", border: "1px solid rgba(224,90,75,0.4)", padding: "1px 6px" }}>
-          {tag}
-        </span>
-        <span style={{ fontSize: 9, padding: "1px 6px", background: "rgba(255,255,255,0.08)", color: "rgba(232,228,220,0.5)" }}>
-          {year}
-        </span>
-      </div>
-      <div style={{ fontSize: 11, color: "rgba(232,228,220,0.65)", lineHeight: 1.5 }}>{desc}</div>
-    </div>
-  );
+  const hardSkills = ["B2C Sales", "Lead Gen", "CRM Mgmt", "HubSpot", "Freshsales", "Figma", "MS Excel", "Google Sheets", "Trello", "Rev. Reporting"];
+  const softSkills = ["Negotiation", "Communication", "Problem Solving", "Coordination", "Curiosity"];
 
   return (
     <>
-      {/* Custom cursor */}
       <div id="cursor" ref={cursorRef} />
 
       {/* Grid lines */}
-      <div
-        style={{
-          position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
-          display: "grid", gridTemplateColumns: "repeat(8, 1fr)",
-        }}
-      >
+      <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, display: "grid", gridTemplateColumns: "repeat(8, 1fr)" }}>
         {Array.from({ length: 8 }).map((_, i) => (
           <span key={i} style={{ borderRight: "1px solid rgba(255,255,255,0.045)" }} />
         ))}
@@ -153,10 +146,7 @@ export default function HomePage() {
 
         {/* ── HERO ── */}
         <section className="hero-section">
-          <div
-            className="greeting-text"
-            style={{ fontSize: 68, fontWeight: 400, lineHeight: 1.05, marginBottom: 32 }}
-          >
+          <div style={{ fontSize: 68, fontWeight: 400, lineHeight: 1.05, marginBottom: 32 }}>
             <span
               style={{
                 display: "block",
@@ -167,14 +157,12 @@ export default function HomePage() {
             >
               {GREETINGS[greetIndex]}
             </span>
-            <span style={{ display: "block" }}>i'm</span>
+            <span style={{ display: "block" }}>i&apos;m</span>
             <span style={{ display: "block" }}>meshal.</span>
           </div>
           <p style={{ fontSize: 15, lineHeight: 1.7, color: "rgba(232,228,220,0.6)", maxWidth: 520, marginBottom: 40 }}>
-            I'm a sales & client experience professional based in Dhaka.
-            <br />
+            I&apos;m a sales &amp; client experience professional based in Dhaka.
             My passion is to build relationships, close deals, and capture
-            <br />
             the world through a lens.
           </p>
           
@@ -194,25 +182,25 @@ export default function HomePage() {
 
         {/* ── SO FAR ── */}
         <section className="reveal page-section">
-          <h2 className="section-heading" style={{ fontSize: 62, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 18, lineHeight: 1 }}>
+          <h2 style={{ fontSize: 62, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 18, lineHeight: 1 }}>
             So far.
           </h2>
           <p style={{ fontSize: 14, color: "rgba(232,228,220,0.55)", maxWidth: 560, lineHeight: 1.7 }}>
-            I've spent the last couple of years building client relationships,
-            hitting sales targets, and coordinating across borders. Here's a
+            I&apos;ve spent the last couple of years building client relationships,
+            hitting sales targets, and coordinating across borders. Here&apos;s a
             quick snapshot of the journey.
           </p>
         </section>
 
         {/* ── PROFILE ── */}
         <section className="reveal page-section">
-          <h2 className="section-heading" style={{ fontSize: 62, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 28, lineHeight: 1 }}>
+          <h2 style={{ fontSize: 62, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 28, lineHeight: 1 }}>
             Profile.
           </h2>
 
           <div style={{ border: "1px solid rgba(255,255,255,0.09)", borderRadius: 4, overflow: "hidden", maxWidth: 960 }}>
 
-            {/* Header bar */}
+            {/* Header */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "16px 20px", borderBottom: "1px solid rgba(255,255,255,0.09)", background: "rgba(255,255,255,0.025)" }}>
               <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: "0.12em" }}>SUBJECT PROFILE</span>
               <div style={{ fontSize: 10, color: "rgba(232,228,220,0.4)", textAlign: "right", lineHeight: 1.6 }}>
@@ -223,18 +211,12 @@ export default function HomePage() {
 
             <div className="profile-cols">
 
-              {/* LEFT COL */}
+              {/* LEFT */}
               <div className="profile-col-left">
                 <div style={{ position: "relative", width: "100%", aspectRatio: "3/4", marginBottom: 14 }}>
-                  <Image
-                    src="/MIM.png"
-                    alt="Meshal"
-                    fill
-                    style={{ objectFit: "cover", borderRadius: 2, border: "1px solid rgba(255,255,255,0.1)" }}
-                  />
+                  <Image src="/MIM.png" alt="Meshal" fill style={{ objectFit: "cover", borderRadius: 2, border: "1px solid rgba(255,255,255,0.1)" }} />
                   <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(0,0,0,0.6)", padding: "4px 6px", display: "flex", justifyContent: "space-between", fontSize: 9, color: "rgba(232,228,220,0.45)" }}>
-                    <span>ID_FACE: 99.9%</span>
-                    <span>● REC</span>
+                    <span>ID_FACE: 99.9%</span><span>● REC</span>
                   </div>
                 </div>
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", marginBottom: 14 }}>
@@ -255,16 +237,12 @@ export default function HomePage() {
                     // CONTRACTS: ENABLED<br />[REMOTE_READY]
                   </div>
                 </div>
-                
-                  href="/Mohaiminul_Islam_Meshal_Resume.pdf"
-                  download
-                  style={{ display: "block", marginTop: 10, padding: 7, border: "1px solid rgba(255,255,255,0.1)", textAlign: "center", fontSize: 10, color: "rgba(232,228,220,0.4)", textDecoration: "none" }}
-                >
+                <a href="/Mohaiminul_Islam_Meshal_Resume.pdf" download style={{ display: "block", marginTop: 10, padding: 7, border: "1px solid rgba(255,255,255,0.1)", textAlign: "center", fontSize: 10, color: "rgba(232,228,220,0.4)", textDecoration: "none" }}>
                   ↓ DOWNLOAD CV
                 </a>
               </div>
 
-              {/* CENTER COL */}
+              {/* CENTER */}
               <div className="profile-col-center">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                   <span style={{ fontSize: 9, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)" }}>COMPETENCE_ANALYSIS_REPORT</span>
@@ -275,28 +253,28 @@ export default function HomePage() {
                   <span style={{ borderBottom: "1px solid rgba(224,90,75,0.5)", color: "#e8e4dc" }}>client relationships</span>{" "}
                   and{" "}
                   <span style={{ borderBottom: "1px solid rgba(224,90,75,0.5)", color: "#e8e4dc" }}>revenue growth.</span>{" "}
-                  I don't just manage pipelines — I build systems that convert. Outside the office, I explore the world through a lens.
+                  I don&apos;t just manage pipelines — I build systems that convert. Outside the office, I explore the world through a lens.
                 </p>
 
                 <div style={{ marginBottom: 20 }}>
                   <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", marginBottom: 12 }}>
                     // FIELD_OPERATIONS [EXPERIENCE]
                   </div>
-                  {entry("[GOZAYAAN LIMITED]", "2024–2025", "Executive — Sales & Tour. B2C sales, CRM pipeline, 90% target achievement.")}
-                  {entry("[ROEBUCK COMMS]", "2023–2024", "Intern — Client Service. 95% client satisfaction, campaign execution.")}
-                  {entry("[RADIANT DATA SYS]", "2023", "Associate — Vendor Coordinator. US clients, 97.5% documentation accuracy.")}
+                  <LogEntry tag="[GOZAYAAN LIMITED]" year="2024–2025" desc="Executive — Sales & Tour. B2C sales, CRM pipeline, 90% target achievement." />
+                  <LogEntry tag="[ROEBUCK COMMS]" year="2023–2024" desc="Intern — Client Service. 95% client satisfaction, campaign execution." />
+                  <LogEntry tag="[RADIANT DATA SYS]" year="2023" desc="Associate — Vendor Coordinator. US clients, 97.5% documentation accuracy." />
                 </div>
 
                 <div>
                   <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", marginBottom: 12 }}>
                     // ACADEMIC_LOG [EDUCATION]
                   </div>
-                  {entry("[BRAC UNIVERSITY]", "2018–2022", "B.Sc. — Computer Science")}
-                  {entry("[WINSOME COLLEGE]", "2014–2016", "HSC — Science")}
+                  <LogEntry tag="[BRAC UNIVERSITY]" year="2018–2022" desc="B.Sc. — Computer Science" />
+                  <LogEntry tag="[WINSOME COLLEGE]" year="2014–2016" desc="HSC — Science" />
                 </div>
               </div>
 
-              {/* RIGHT COL */}
+              {/* RIGHT */}
               <div className="profile-col-right">
                 <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", textAlign: "center", marginBottom: 14 }}>
                   EQUIPMENT_INVENTORY
@@ -304,13 +282,13 @@ export default function HomePage() {
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ fontSize: 8, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 8 }}>HARD SKILLS</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                    {["B2C Sales", "Lead Gen", "CRM Mgmt", "HubSpot", "Freshsales", "Figma", "MS Excel", "Google Sheets", "Trello", "Rev. Reporting"].map(skill)}
+                    {hardSkills.map((s) => <SkillTag key={s} label={s} />)}
                   </div>
                 </div>
                 <div>
                   <div style={{ fontSize: 8, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 8 }}>SOFT SKILLS</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                    {["Negotiation", "Communication", "Problem Solving", "Coordination", "Curiosity"].map(skill)}
+                    {softSkills.map((s) => <SkillTag key={s} label={s} />)}
                   </div>
                 </div>
               </div>
@@ -321,7 +299,7 @@ export default function HomePage() {
 
         {/* ── SHOOT ── */}
         <section className="reveal page-section">
-          <h2 className="section-heading" style={{ fontSize: 62, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 18, lineHeight: 1 }}>
+          <h2 style={{ fontSize: 62, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 18, lineHeight: 1 }}>
             Shoot.
           </h2>
           <p style={{ fontSize: 14, color: "rgba(232,228,220,0.55)", maxWidth: 560, lineHeight: 1.7, marginBottom: 28 }}>
@@ -344,23 +322,17 @@ export default function HomePage() {
                   <div key={i} style={{ aspectRatio: "1", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 2 }} />
                 ))}
           </div>
-          <Link
-            href="/gallery"
-            style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, color: "rgba(232,228,220,0.5)", borderBottom: "1px solid rgba(255,255,255,0.15)", paddingBottom: 2, textDecoration: "none" }}
-          >
+          <Link href="/gallery" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 13, color: "rgba(232,228,220,0.5)", borderBottom: "1px solid rgba(255,255,255,0.15)", paddingBottom: 2, textDecoration: "none" }}>
             → view full gallery
           </Link>
         </section>
 
         {/* ── SAY HI ── */}
         <section id="contact" className="reveal page-section">
-          <h2 className="section-heading" style={{ fontSize: 62, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 28, lineHeight: 1 }}>
+          <h2 style={{ fontSize: 62, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 28, lineHeight: 1 }}>
             Say hi.
           </h2>
-          
-            href="mailto:mohaiminulislammeshal@gmail.com"
-            style={{ fontSize: 24, fontWeight: 700, color: "#e8e4dc", marginBottom: 24, display: "block", textDecoration: "none", letterSpacing: "-0.01em", lineHeight: 1.4 }}
-          >
+          <a href="mailto:mohaiminulislammeshal@gmail.com" style={{ fontSize: 24, fontWeight: 700, color: "#e8e4dc", marginBottom: 24, display: "block", textDecoration: "none", letterSpacing: "-0.01em", lineHeight: 1.4 }}>
             mohaiminulislammeshal<br />@gmail.com
           </a>
           <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>

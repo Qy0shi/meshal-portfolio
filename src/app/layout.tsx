@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Cursor from "@/components/Cursor";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,11 +11,7 @@ export const metadata: Metadata = {
     description: "Sales professional & photographer from Dhaka, Bangladesh.",
     type: "website",
   },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "Meshal",
-  },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Meshal" },
 };
 
 export const viewport: Viewport = {
@@ -31,7 +28,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
       </head>
-      <body>{children}</body>
+      <body>
+        <Cursor />
+        {children}
+      </body>
     </html>
   );
 }

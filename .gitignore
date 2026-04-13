@@ -1,0 +1,8 @@
+.next/
+node_modules/
+.env.local
+.next/static/
+public/sw.js
+public/workbox-*.js
+
+.vercel

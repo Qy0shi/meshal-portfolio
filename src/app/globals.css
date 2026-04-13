@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════
+   ISSUE 4 — Light mode colour audit
+   ISSUE 1 — Liquid glass CSS vars
+   ═══════════════════════════════════════════ */
+
+:root {
+  --font-geist-sans: 'Geist', -apple-system, 'SF Pro Display', system-ui;
+  --font-geist-mono: 'Geist Mono', 'SF Mono', monospace;
+
+  /* Dark mode (default) */
+  --bg-body: linear-gradient(160deg, #06141B 0%, #11212D 100%);
+  --text-primary: #CCD0CF;
+  --text-secondary: rgba(204, 208, 207, 0.50);
+  --text-hint: rgba(204, 208, 207, 0.25);
+  --accent: #4A5C6A;
+  --accent-highlight: #9BA8AB;
+
+  /* Liquid glass */
+  --glass-bg: rgba(6, 20, 27, 0.52);
+  --glass-border: rgba(155, 168, 171, 0.20);
+  --glass-glow: rgba(155, 168, 171, 0.25);
+
+  /* Buttons */
+  --btn-primary-bg: #4A5C6A;
+  --btn-primary-text: #CCD0CF;
+  --btn-ghost-bg: transparent;
+  --btn-ghost-border: rgba(155, 168, 171, 0.25);
+  --btn-ghost-text: #CCD0CF;
+}
+
+[data-theme="light"],
+html:not(.dark) {
+  --bg-body: linear-gradient(160deg, #d8dfe3 0%, #c8d0d4 100%);
+  --text-primary: #06141B;
+  --text-secondary: rgba(6, 20, 27, 0.55);
+  --text-hint: rgba(6, 20, 27, 0.30);
+  --accent: #253745;
+  --accent-highlight: #4A5C6A;
+
+  /* Liquid glass */
+  --glass-bg: rgba(220, 226, 228, 0.58);
+  --glass-border: rgba(255, 255, 255, 0.82);
+  --glass-glow: rgba(37, 55, 69, 0.15);
+
+  /* Buttons */
+  --btn-primary-bg: #253745;
+  --btn-primary-text: #CCD0CF;
+  --btn-ghost-bg: rgba(37, 55, 69, 0.12);
+  --btn-ghost-border: rgba(37, 55, 69, 0.22);
+  --btn-ghost-text: #253745;
+}
+
+/* ═══════════════════════════════════════════
+   ISSUE 7 — Smooth theme transition
+   ═══════════════════════════════════════════ */
+
+*, *::before, *::after {
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.25s ease;
+}
+
+/* ── Base ─────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+body {
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), -apple-system, 'SF Pro Display',
+               BlinkMacSystemFont, system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: color 0.25s ease;
+  margin: 0;
+}
+
+/* ── Scrollbar ────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #4A5C6A; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9BA8AB; }
+
+/* ── Selection ────────────────────────────── */
+::selection { background: #4A5C6A; color: #CCD0CF; }
+
+/* ═══════════════════════════════════════════
+   ISSUE 8 — Float animation
+   ═══════════════════════════════════════════ */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; filter: blur(2px); }
+  50% { opacity: 1; filter: blur(4px); }
+}
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+/* ── Utility ──────────────────────────────── */
+.text-secondary { color: var(--text-secondary); }
+.text-hint { color: var(--text-hint); }
+
+/* ── Masonry grid (gallery) ───────────────── */
+.masonry-grid { column-count: 4; column-gap: 10px; }
+.masonry-grid img { break-inside: avoid; margin-bottom: 10px; border-radius: 10px; width: 100%; }
+@media (max-width: 768px) { .masonry-grid { column-count: 3; } }
+@media (max-width: 480px) { .masonry-grid { column-count: 2; } }
+
+/* ── Body padding for navbars ─────────────── */
+@media (max-width: 767px) {
+  body { padding-top: 60px; padding-bottom: 100px; }
+}
+@media (min-width: 768px) {
+  body { padding-top: 74px; }
+}

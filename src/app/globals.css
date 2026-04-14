@@ -21,7 +21,6 @@ body {
   #cursor { display: none !important; }
 }
 
-/* ── CURSOR ── */
 #cursor {
   width: 40px; height: 40px;
   border: 1.5px solid rgba(224,90,75,0.6);
@@ -47,25 +46,19 @@ body {
   border-color: rgba(224,90,75,0.45);
 }
 
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(224,90,75,0.25); border-radius: 2px; }
 ::selection { background: rgba(224,90,75,0.3); color: #e8e4dc; }
 
-/* ── MORPH REVEAL (no snap, just smooth fade+rise) ── */
 .morph {
   opacity: 0;
   transform: translateY(48px);
   transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
               transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.morph.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.morph.visible { opacity: 1; transform: translateY(0); }
 
-/* ── LAYOUT ── */
 .site-wrap {
   max-width: 860px;
   margin: 0 auto;
@@ -87,12 +80,17 @@ body {
   border-top: 1px solid rgba(255,255,255,0.06);
 }
 
-/* ── TYPOGRAPHY ── */
+/* ── ALL heading text same weight ── */
 .hero-text {
   font-size: clamp(60px, 9vw, 96px);
   font-weight: 400;
-  line-height: 1.0;
+  line-height: 1.05;
   letter-spacing: -0.01em;
+  color: #e8e4dc;
+}
+.hero-text span {
+  font-weight: 400 !important;
+  display: block;
 }
 
 .section-heading {
@@ -101,17 +99,48 @@ body {
   line-height: 1.0;
   letter-spacing: -0.02em;
   margin-bottom: 28px;
+  color: #e8e4dc;
 }
 
-/* Body text — readable size */
+/* ── Body text — same size as Adrian's ── */
 .body-text {
-  font-size: 17px;
+  font-size: 19px;
   line-height: 1.75;
-  color: rgba(232,228,220,0.6);
-  max-width: 540px;
+  color: rgba(232,228,220,0.62);
+  max-width: 580px;
 }
 
-/* ── PROFILE ── */
+/* ── Red category labels ── */
+.red-label {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: #e05a4b;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+/* ── Pill buttons hover like Adrian's ── */
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 28px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  font-size: 15px;
+  color: rgba(232,228,220,0.55);
+  text-decoration: none;
+  font-family: 'Courier Prime', monospace;
+  background: transparent;
+  cursor: none;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.pill-btn:hover {
+  background: rgba(232,228,220,0.9);
+  color: #080808;
+  border-color: rgba(232,228,220,0.9);
+}
+
+/* ── Profile ── */
 .profile-cols { display: grid; grid-template-columns: 220px 1fr 200px; }
 .profile-col-left {
   border-right: 1px solid rgba(255,255,255,0.07);
@@ -121,14 +150,14 @@ body {
 .profile-col-center { border-right: 1px solid rgba(255,255,255,0.07); padding: 24px 28px; }
 .profile-col-right { padding: 20px; }
 
-/* ── GALLERY THUMBNAILS on homepage ── */
+/* ── Thumbnails — natural proportions ── */
 .thumb-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 .thumb-item {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
   border-radius: 3px;
   border: 1px solid rgba(255,255,255,0.07);
@@ -142,11 +171,11 @@ body {
   transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), filter 0.4s ease;
 }
 .thumb-item:hover img {
-  transform: scale(1.07);
-  filter: brightness(1.15);
+  transform: scale(1.06);
+  filter: brightness(1.12);
 }
 
-/* ── GALLERY PAGE ── */
+/* ── Gallery page ── */
 .gallery-grid { columns: 3 200px; gap: 8px; }
 .gallery-grid-item {
   break-inside: avoid;
@@ -159,11 +188,10 @@ body {
   transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), filter 0.4s ease;
 }
 .gallery-grid-item:hover {
-  transform: scale(1.03);
-  filter: brightness(1.12);
+  transform: scale(1.02);
+  filter: brightness(1.1);
 }
 
-/* ── FOOTER ── */
 .footer-bar {
   padding: 40px 0;
   border-top: 1px solid rgba(255,255,255,0.06);
@@ -173,7 +201,6 @@ body {
   color: rgba(232,228,220,0.18);
 }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .site-wrap { padding: 0 28px; }
   .page-section { padding: 72px 0; }
@@ -183,4 +210,5 @@ body {
   .profile-col-center { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
   .gallery-grid { columns: 2; }
   .thumb-grid { grid-template-columns: repeat(2, 1fr); }
+  .body-text { font-size: 16px; }
 }

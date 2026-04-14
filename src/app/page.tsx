@@ -20,9 +20,9 @@ interface Photo { id: number; url: string; title: string; category: string; }
 function SkillTag({ label }: { label: string }) {
   return (
     <span style={{
-      fontSize: 11, padding: "4px 10px",
+      fontSize: 12, padding: "5px 11px",
       border: "1px solid rgba(255,255,255,0.1)",
-      color: "rgba(232,228,220,0.6)",
+      color: "rgba(232,228,220,0.65)",
       background: "rgba(255,255,255,0.03)",
       fontFamily: "'Courier Prime', monospace",
       lineHeight: 1.4,
@@ -34,12 +34,12 @@ function SkillTag({ label }: { label: string }) {
 
 function LogEntry({ tag, year, desc }: { tag: string; year: string; desc: string }) {
   return (
-    <div style={{ marginBottom: 18 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" as const }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#e05a4b", border: "1px solid rgba(224,90,75,0.4)", padding: "2px 8px" }}>{tag}</span>
-        <span style={{ fontSize: 11, padding: "2px 8px", background: "rgba(255,255,255,0.08)", color: "rgba(232,228,220,0.5)" }}>{year}</span>
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7, flexWrap: "wrap" as const }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: "#e05a4b", border: "1px solid rgba(224,90,75,0.4)", padding: "2px 9px" }}>{tag}</span>
+        <span style={{ fontSize: 12, padding: "2px 9px", background: "rgba(255,255,255,0.08)", color: "rgba(232,228,220,0.5)" }}>{year}</span>
       </div>
-      <div style={{ fontSize: 14, color: "rgba(232,228,220,0.65)", lineHeight: 1.65 }}>{desc}</div>
+      <div style={{ fontSize: 15, color: "rgba(232,228,220,0.65)", lineHeight: 1.7 }}>{desc}</div>
     </div>
   );
 }
@@ -111,10 +111,7 @@ export default function HomePage() {
   useEffect(() => {
     const obs = new IntersectionObserver(
       (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("visible");
-          obs.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); }
       }),
       { threshold: 0.1, rootMargin: "0px 0px -60px 0px" }
     );
@@ -144,9 +141,14 @@ export default function HomePage() {
     { Anim: GlobeAnim, label: "Coordinating across borders", text: "Coordinating across US, BD and international clients with 97.5% accuracy." },
   ];
 
+  const contactLinks = [
+    { label: "Email", href: "mailto:mohaiminulislammeshal@gmail.com" },
+    { label: "LinkedIn", href: "https://linkedin.com/in/mohaiminul-islam-meshal" },
+    { label: "Instagram", href: "#" },
+  ];
+
   return (
     <>
-      {/* Say hi overlay */}
       {showMessage && (
         <div style={{ position: "fixed", inset: 0, zIndex: 300, background: "#080808", display: "flex", flexDirection: "column" }}>
           <div style={{ flex: 1, maxWidth: 860, margin: "0 auto", width: "100%", padding: "120px 64px 40px", display: "flex", flexDirection: "column" }}>
@@ -156,13 +158,11 @@ export default function HomePage() {
             />
           </div>
           <div style={{ maxWidth: 860, margin: "0 auto", width: "100%", padding: "20px 64px 48px", borderTop: "1px solid rgba(255,255,255,0.07)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <button onClick={() => { setShowMessage(false); setMessage(""); }}
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", border: "1px solid rgba(232,228,220,0.12)", borderRadius: 100, fontSize: 14, color: "rgba(232,228,220,0.45)", background: "none", fontFamily: "'Courier Prime', monospace", cursor: "none" }}>
+            <button onClick={() => { setShowMessage(false); setMessage(""); }} className="pill-btn">
               ← go back
             </button>
             {message.trim() && (
-              <a href={`mailto:mohaiminulislammeshal@gmail.com?subject=Hey Meshal!&body=${encodeURIComponent(message)}`}
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 28px", border: "1px solid rgba(224,90,75,0.4)", borderRadius: 100, fontSize: 14, color: "#e05a4b", background: "rgba(224,90,75,0.08)", textDecoration: "none", fontFamily: "'Courier Prime', monospace" }}>
+              <a href={`mailto:mohaiminulislammeshal@gmail.com?subject=Hey Meshal!&body=${encodeURIComponent(message)}`} className="pill-btn" style={{ color: "#e05a4b", borderColor: "rgba(224,90,75,0.4)", background: "rgba(224,90,75,0.08)" }}>
                 send →
               </a>
             )}
@@ -201,7 +201,7 @@ export default function HomePage() {
           <section className="hero-section">
             <div className="hero-text" style={{ marginBottom: 40 }}>
               <span style={{
-                display: "block",
+                fontWeight: 400,
                 opacity: greetVisible ? 1 : 0,
                 transform: greetVisible ? "translateY(0)" : "translateY(-12px)",
                 transition: "opacity 0.35s ease, transform 0.35s ease",
@@ -209,15 +209,14 @@ export default function HomePage() {
               }}>
                 {GREETINGS[greetIndex]}
               </span>
-              <span style={{ display: "block" }}>i&apos;m</span>
-              <span style={{ display: "block" }}>meshal.</span>
+              <span style={{ fontWeight: 400 }}>i&apos;m</span>
+              <span style={{ fontWeight: 400 }}>meshal.</span>
             </div>
             <p className="body-text" style={{ marginBottom: 52 }}>
               I&apos;m a sales &amp; client experience professional based in Dhaka.
               My passion is to build relationships, close deals, and capture the world through a lens.
             </p>
-            <button onClick={() => setShowMessage(true)}
-              style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "14px 32px", border: "1px solid rgba(232,228,220,0.2)", borderRadius: 100, fontSize: 15, color: "rgba(232,228,220,0.65)", background: "transparent", fontFamily: "'Courier Prime', monospace", cursor: "none", width: "fit-content" }}>
+            <button onClick={() => setShowMessage(true)} className="pill-btn" style={{ gap: 10 }}>
               → say hi
             </button>
           </section>
@@ -228,17 +227,17 @@ export default function HomePage() {
           <section className="page-section">
             <div className="morph">
               <h2 className="section-heading">So far.</h2>
-              <p className="body-text" style={{ marginBottom: 56 }}>
+              <p className="body-text" style={{ marginBottom: 60 }}>
                 I&apos;ve spent the last couple of years building client relationships,
                 hitting sales targets, and coordinating across borders.
               </p>
-              <div style={{ display: "flex", flexDirection: "column" as const, gap: 48 }}>
+              <div style={{ display: "flex", flexDirection: "column" as const, gap: 52 }}>
                 {soFarItems.map(({ Anim, label, text }) => (
                   <div key={label} style={{ display: "flex", alignItems: "flex-start", gap: 28 }}>
                     <Anim />
                     <div style={{ paddingTop: 4 }}>
-                      <div style={{ fontSize: 11, letterSpacing: "0.12em", color: "#e05a4b", marginBottom: 10, textTransform: "uppercase" as const }}>{label}</div>
-                      <p style={{ fontSize: 16, color: "rgba(232,228,220,0.55)", lineHeight: 1.75, maxWidth: 440 }}>{text}</p>
+                      <div className="red-label">{label}</div>
+                      <p style={{ fontSize: 17, color: "rgba(232,228,220,0.55)", lineHeight: 1.75, maxWidth: 460 }}>{text}</p>
                     </div>
                   </div>
                 ))}
@@ -277,17 +276,17 @@ export default function HomePage() {
                       {([["CLASS:", "SALES_PRO"], ["XP:", "2+ YRS"], ["LANG_1:", "BN (Native)"], ["LANG_2:", "EN (Fluent)"]] as string[][]).map(([k, v]) => (
                         <div key={k}>
                           <span style={{ fontSize: 10, color: "rgba(232,228,220,0.3)", letterSpacing: "0.08em", display: "block", marginBottom: 3 }}>{k}</span>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(232,228,220,0.75)" }}>{v}</span>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: "rgba(232,228,220,0.75)" }}>{v}</span>
                         </div>
                       ))}
                     </div>
                     <div style={{ marginTop: 16, padding: 12, border: "1px solid rgba(224,90,75,0.35)", background: "rgba(224,90,75,0.08)", borderRadius: 2 }}>
-                      <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 5 }}>● SYSTEM_ALERT</div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: "#e8e4dc", marginBottom: 4 }}>OPEN TO WORK</div>
-                      <div style={{ fontSize: 10, color: "rgba(232,228,220,0.4)", lineHeight: 1.6 }}>// CONTRACTS: ENABLED<br />[REMOTE_READY]</div>
+                      <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 5 }}>● SYSTEM_ALERT</div>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: "#e8e4dc", marginBottom: 4 }}>OPEN TO WORK</div>
+                      <div style={{ fontSize: 11, color: "rgba(232,228,220,0.4)", lineHeight: 1.6 }}>// CONTRACTS: ENABLED<br />[REMOTE_READY]</div>
                     </div>
                     <a href="/Mohaiminul_Islam_Meshal_Resume.pdf" download
-                      style={{ display: "block", marginTop: 12, padding: 8, border: "1px solid rgba(255,255,255,0.1)", textAlign: "center" as const, fontSize: 11, color: "rgba(232,228,220,0.45)", textDecoration: "none" }}>
+                      style={{ display: "block", marginTop: 12, padding: 9, border: "1px solid rgba(255,255,255,0.1)", textAlign: "center" as const, fontSize: 12, color: "rgba(232,228,220,0.45)", textDecoration: "none" }}>
                       ↓ DOWNLOAD CV
                     </a>
                   </div>
@@ -295,10 +294,10 @@ export default function HomePage() {
                   {/* CENTER */}
                   <div className="profile-col-center">
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
-                      <span style={{ fontSize: 10, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)" }}>COMPETENCE_ANALYSIS_REPORT</span>
-                      <span style={{ fontSize: 10, color: "rgba(224,90,75,0.6)" }}>[READ_ONLY]</span>
+                      <span style={{ fontSize: 11, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)" }}>COMPETENCE_ANALYSIS_REPORT</span>
+                      <span style={{ fontSize: 11, color: "rgba(224,90,75,0.6)" }}>[READ_ONLY]</span>
                     </div>
-                    <p style={{ fontSize: 14, lineHeight: 1.8, color: "rgba(232,228,220,0.65)", marginBottom: 24, paddingBottom: 20, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+                    <p style={{ fontSize: 15, lineHeight: 1.8, color: "rgba(232,228,220,0.65)", marginBottom: 24, paddingBottom: 20, borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
                       Sales professional obsessed with the fusion of{" "}
                       <span style={{ borderBottom: "1px solid rgba(224,90,75,0.5)", color: "#e8e4dc" }}>client relationships</span>{" "}
                       and{" "}
@@ -306,29 +305,29 @@ export default function HomePage() {
                       I don&apos;t just manage pipelines — I build systems that convert.
                     </p>
                     <div style={{ marginBottom: 24 }}>
-                      <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", marginBottom: 14 }}>// FIELD_OPERATIONS [EXPERIENCE]</div>
+                      <div style={{ fontSize: 11, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", marginBottom: 14 }}>// FIELD_OPERATIONS [EXPERIENCE]</div>
                       <LogEntry tag="[GOZAYAAN LIMITED]" year="2024–2025" desc="Executive — Sales & Tour. B2C sales, CRM pipeline, 90% target achievement." />
                       <LogEntry tag="[ROEBUCK COMMS]" year="2023–2024" desc="Intern — Client Service. 95% client satisfaction, campaign execution." />
                       <LogEntry tag="[RADIANT DATA SYS]" year="2023" desc="Associate — Vendor Coordinator. US clients, 97.5% documentation accuracy." />
                     </div>
                     <div>
-                      <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", marginBottom: 14 }}>// ACADEMIC_LOG [EDUCATION]</div>
-                      <LogEntry tag="[BRAC UNIVERSITY]" year="2018–2022" desc="B.Sc. — Computer Science" />
+                      <div style={{ fontSize: 11, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", marginBottom: 14 }}>// ACADEMIC_LOG [EDUCATION]</div>
+                      <LogEntry tag="[BRAC UNIVERSITY]" year="2016–2022" desc="B.Sc. — Computer Science" />
                       <LogEntry tag="[WINSOME COLLEGE]" year="2014–2016" desc="HSC — Science" />
                     </div>
                   </div>
 
                   {/* RIGHT */}
                   <div className="profile-col-right">
-                    <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", textAlign: "center" as const, marginBottom: 16 }}>EQUIPMENT_INVENTORY</div>
+                    <div style={{ fontSize: 11, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", textAlign: "center" as const, marginBottom: 16 }}>EQUIPMENT_INVENTORY</div>
                     <div style={{ marginBottom: 20 }}>
-                      <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 10 }}>HARD SKILLS</div>
+                      <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 10 }}>HARD SKILLS</div>
                       <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
                         {hardSkills.map((s) => <SkillTag key={s} label={s} />)}
                       </div>
                     </div>
                     <div>
-                      <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 10 }}>SOFT SKILLS</div>
+                      <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 10 }}>SOFT SKILLS</div>
                       <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
                         {softSkills.map((s) => <SkillTag key={s} label={s} />)}
                       </div>
@@ -360,8 +359,7 @@ export default function HomePage() {
                       <div key={i} className="thumb-item" />
                     ))}
               </div>
-              <Link href="/gallery"
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 15, color: "rgba(232,228,220,0.45)", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: 2, textDecoration: "none" }}>
+              <Link href="/gallery" className="pill-btn" style={{ fontSize: 15 }}>
                 → view full gallery
               </Link>
             </div>
@@ -377,15 +375,11 @@ export default function HomePage() {
                 Always happy to connect — whether it&apos;s work, photography, or just a conversation.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" as const }}>
-                {[
-                  { label: "Gmail", href: "mailto:mohaiminulislammeshal@gmail.com" },
-                  { label: "LinkedIn", href: "https://linkedin.com/in/mohaiminul-islam-meshal" },
-                  { label: "Instagram", href: "#" },
-                ].map(({ label, href }) => (
+                {contactLinks.map(({ label, href }) => (
                   <a key={label} href={href}
                     target={href.startsWith("http") ? "_blank" : undefined}
                     rel="noopener noreferrer"
-                    style={{ display: "inline-flex", alignItems: "center", padding: "12px 28px", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 100, fontSize: 15, color: "rgba(232,228,220,0.55)", textDecoration: "none", fontFamily: "'Courier Prime', monospace" }}>
+                    className="pill-btn">
                     {label}
                   </a>
                 ))}
@@ -394,7 +388,6 @@ export default function HomePage() {
           </section>
         </div>
 
-        {/* ── FOOTER ── */}
         <div className="site-wrap">
           <footer className="footer-bar">
             <span>© 2025 Mohaiminul Islam Meshal</span>

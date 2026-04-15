@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Cursor from "@/components/Cursor";
+import Splash from "@/components/Splash";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
       </head>
       <body>
+        <Splash />
         <Cursor />
         {children}
       </body>

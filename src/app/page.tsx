@@ -3,30 +3,16 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
-const GREETINGS = [
-  "hello.",
-  "bonjour.",
-  "হ্যালো.",
-  "hola.",
-  "ciao.",
-  "مرحبا.",
-  "salut.",
-  "hallo.",
-];
+const GREETINGS = ["hello.","bonjour.","হ্যালো.","hola.","ciao.","مرحبا.","salut.","hallo."];
 
 interface Photo { id: number; url: string; title: string; category: string; }
 
 function SkillTag({ label }: { label: string }) {
   return (
-    <span style={{
-      fontSize: 12, padding: "5px 11px",
-      border: "1px solid rgba(255,255,255,0.1)",
-      color: "rgba(232,228,220,0.65)",
-      background: "rgba(255,255,255,0.03)",
-      fontFamily: "'Courier Prime', monospace",
-      lineHeight: 1.4,
-    }}>
+    <span style={{ fontSize: 12, padding: "5px 11px", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(232,228,220,0.65)", background: "rgba(255,255,255,0.03)", fontFamily: "'Courier Prime', monospace", lineHeight: 1.4 }}>
       {label}
     </span>
   );
@@ -40,6 +26,29 @@ function LogEntry({ tag, year, desc }: { tag: string; year: string; desc: string
         <span style={{ fontSize: 12, padding: "2px 9px", background: "rgba(255,255,255,0.08)", color: "rgba(232,228,220,0.5)" }}>{year}</span>
       </div>
       <div style={{ fontSize: 15, color: "rgba(232,228,220,0.65)", lineHeight: 1.7 }}>{desc}</div>
+    </div>
+  );
+}
+
+function Dragon() {
+  return (
+    <div className="dragon-wrap">
+      <svg width="120" height="60" viewBox="0 0 120 60" fill="none" opacity="0.045">
+        {/* Body */}
+        <path d="M10,30 Q30,20 50,28 Q70,36 90,25 Q105,18 115,22" stroke="#e8e4dc" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+        {/* Head */}
+        <ellipse cx="115" cy="21" rx="7" ry="5" fill="#e8e4dc" opacity="0.6"/>
+        <path d="M120,18 L128,14 L124,20 Z" fill="#e8e4dc" opacity="0.5"/>
+        {/* Top wing */}
+        <path d="M55,27 Q45,5 35,8 Q50,18 55,27Z" fill="#e8e4dc" opacity="0.5"/>
+        {/* Bottom wing */}
+        <path d="M55,29 Q45,48 35,45 Q50,36 55,29Z" fill="#e8e4dc" opacity="0.4"/>
+        {/* Tail */}
+        <path d="M10,30 Q0,28 -8,35 Q-4,28 -12,22" stroke="#e8e4dc" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+        {/* Legs */}
+        <path d="M70,32 L65,44 L72,44" stroke="#e8e4dc" strokeWidth="1" fill="none" strokeLinecap="round"/>
+        <path d="M85,28 L80,40 L87,40" stroke="#e8e4dc" strokeWidth="1" fill="none" strokeLinecap="round"/>
+      </svg>
     </div>
   );
 }
@@ -64,8 +73,7 @@ function TargetAnim() {
   return (
     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" style={{ flexShrink: 0 }}>
       <circle cx="26" cy="26" r="20" stroke="rgba(224,90,75,0.12)" strokeWidth="1.5" />
-      <circle cx="26" cy="26" r="20" stroke="#e05a4b" strokeWidth="1.5"
-        strokeDasharray="125.6" strokeLinecap="round" transform="rotate(-90 26 26)">
+      <circle cx="26" cy="26" r="20" stroke="#e05a4b" strokeWidth="1.5" strokeDasharray="125.6" strokeLinecap="round" transform="rotate(-90 26 26)">
         <animate attributeName="stroke-dashoffset" values="125.6;10;125.6" dur="2.5s" repeatCount="indefinite" />
       </circle>
       <circle cx="26" cy="26" r="4" fill="#e05a4b">
@@ -82,8 +90,7 @@ function GlobeAnim() {
       <ellipse cx="26" cy="26" rx="9" ry="18" stroke="rgba(224,90,75,0.3)" strokeWidth="1" />
       <line x1="8" y1="26" x2="44" y2="26" stroke="rgba(224,90,75,0.2)" strokeWidth="1" />
       <circle cx="26" cy="8" r="3" fill="#e05a4b" opacity="0.8">
-        <animateTransform attributeName="transform" type="rotate"
-          from="0 26 26" to="360 26 26" dur="3s" repeatCount="indefinite" />
+        <animateTransform attributeName="transform" type="rotate" from="0 26 26" to="360 26 26" dur="3s" repeatCount="indefinite" />
       </circle>
     </svg>
   );
@@ -96,23 +103,23 @@ export default function HomePage() {
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("");
   const [showTop, setShowTop] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const interval = setInterval(() => {
       setGreetVisible(false);
-      setTimeout(() => {
-        setGreetIndex((i) => (i + 1) % GREETINGS.length);
-        setGreetVisible(true);
-      }, 350);
+      setTimeout(() => { setGreetIndex((i) => (i + 1) % GREETINGS.length); setGreetVisible(true); }, 350);
     }, 2400);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
-      (entries) => entries.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); }
-      }),
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); } }),
       { threshold: 0.1, rootMargin: "0px 0px -60px 0px" }
     );
     document.querySelectorAll(".morph").forEach((el) => obs.observe(el));
@@ -132,35 +139,73 @@ export default function HomePage() {
       .catch(() => {});
   }, []);
 
+  // Lock scroll when lightbox open
+  useEffect(() => {
+    if (lightboxIndex !== null) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+    return () => document.body.classList.remove("no-scroll");
+  }, [lightboxIndex]);
+
+  const openLightbox = (i: number) => { setLightboxIndex(i); setZoom(1); setPan({ x: 0, y: 0 }); };
+  const closeLightbox = () => { setLightboxIndex(null); setZoom(1); setPan({ x: 0, y: 0 }); };
+
+  const prev = () => { if (lightboxIndex === null) return; setZoom(1); setPan({ x: 0, y: 0 }); setLightboxIndex((lightboxIndex - 1 + photos.length) % photos.length); };
+  const next = () => { if (lightboxIndex === null) return; setZoom(1); setPan({ x: 0, y: 0 }); setLightboxIndex((lightboxIndex + 1) % photos.length); };
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (lightboxIndex === null) return;
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "Escape") closeLightbox();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxIndex]);
+
+  const onWheel = (e: React.WheelEvent) => {
+    e.stopPropagation();
+    setZoom((z) => Math.min(4, Math.max(0.5, z - e.deltaY * 0.002)));
+  };
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (zoom <= 1) return;
+    setDragging(true);
+    setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+  };
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!dragging) return;
+    setPan({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+  };
+  const onMouseUp = () => setDragging(false);
+
+  const currentPhoto = lightboxIndex !== null ? photos[lightboxIndex] : null;
+
   const hardSkills = ["B2C Sales","Lead Gen","CRM Mgmt","HubSpot","Freshsales","Figma","MS Excel","Google Sheets","Trello","Rev. Reporting"];
   const softSkills = ["Negotiation","Communication","Problem Solving","Coordination","Curiosity"];
-
   const soFarItems = [
     { Anim: RelationshipAnim, label: "Relationship building", text: "Building relationships that convert — not just contacts, but long-term partners." },
     { Anim: TargetAnim, label: "Hitting sales targets", text: "Consistently hitting 90% of monthly targets through structured pipeline management." },
     { Anim: GlobeAnim, label: "Coordinating across borders", text: "Coordinating across US, BD and international clients with 97.5% accuracy." },
   ];
 
-  const contactLinks = [
-    { label: "Email", href: "mailto:mohaiminulislammeshal@gmail.com" },
-    { label: "LinkedIn", href: "https://linkedin.com/in/mohaiminul-islam-meshal" },
-    { label: "Instagram", href: "#" },
-  ];
-
   return (
     <>
+      {/* Dragon */}
+      <Dragon />
+
+      {/* Say hi overlay */}
       {showMessage && (
         <div style={{ position: "fixed", inset: 0, zIndex: 300, background: "#080808", display: "flex", flexDirection: "column" }}>
           <div style={{ flex: 1, maxWidth: 860, margin: "0 auto", width: "100%", padding: "120px 64px 40px", display: "flex", flexDirection: "column" }}>
-            <textarea autoFocus value={message} onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type your message..."
-              style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "#e8e4dc", fontSize: 22, fontFamily: "'Courier Prime', monospace", resize: "none", lineHeight: 1.8, caretColor: "#e05a4b" }}
-            />
+            <textarea autoFocus value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Type your message..."
+              style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "#e8e4dc", fontSize: 22, fontFamily: "'Courier Prime', monospace", resize: "none", lineHeight: 1.8, caretColor: "#e05a4b" }} />
           </div>
           <div style={{ maxWidth: 860, margin: "0 auto", width: "100%", padding: "20px 64px 48px", borderTop: "1px solid rgba(255,255,255,0.07)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <button onClick={() => { setShowMessage(false); setMessage(""); }} className="pill-btn">
-              ← go back
-            </button>
+            <button onClick={() => { setShowMessage(false); setMessage(""); }} className="pill-btn">← go back</button>
             {message.trim() && (
               <a href={`mailto:mohaiminulislammeshal@gmail.com?subject=Hey Meshal!&body=${encodeURIComponent(message)}`} className="pill-btn" style={{ color: "#e05a4b", borderColor: "rgba(224,90,75,0.4)", background: "rgba(224,90,75,0.08)" }}>
                 send →
@@ -185,28 +230,13 @@ export default function HomePage() {
         </button>
       )}
 
-      {/* Logo */}
-      <div style={{ position: "fixed", top: 28, left: 0, right: 0, zIndex: 100, pointerEvents: "none" }}>
-        <div style={{ maxWidth: 860, margin: "0 auto", padding: "0 64px" }}>
-          <a href="#" style={{ fontSize: 12, color: "rgba(232,228,220,0.25)", textDecoration: "none", letterSpacing: "0.05em", pointerEvents: "all" }}>
-            meshal.pf
-          </a>
-        </div>
-      </div>
-
       <div style={{ position: "relative", zIndex: 1 }}>
 
-        {/* ── HERO ── */}
+        {/* HERO */}
         <div className="site-wrap">
           <section className="hero-section">
             <div className="hero-text" style={{ marginBottom: 40 }}>
-              <span style={{
-                fontWeight: 400,
-                opacity: greetVisible ? 1 : 0,
-                transform: greetVisible ? "translateY(0)" : "translateY(-12px)",
-                transition: "opacity 0.35s ease, transform 0.35s ease",
-                whiteSpace: "nowrap",
-              }}>
+              <span style={{ fontWeight: 400, opacity: greetVisible ? 1 : 0, transform: greetVisible ? "translateY(0)" : "translateY(-12px)", transition: "opacity 0.35s ease, transform 0.35s ease", whiteSpace: "nowrap" }}>
                 {GREETINGS[greetIndex]}
               </span>
               <span style={{ fontWeight: 400 }}>i&apos;m</span>
@@ -222,16 +252,15 @@ export default function HomePage() {
           </section>
         </div>
 
-        {/* ── SO FAR ── */}
+        {/* SO FAR */}
         <div className="site-wrap">
           <section className="page-section">
             <div className="morph">
               <h2 className="section-heading">So far.</h2>
-              <p className="body-text" style={{ marginBottom: 60 }}>
-                I&apos;ve spent the last couple of years building client relationships,
-                hitting sales targets, and coordinating across borders.
+              <p className="body-text" style={{ marginBottom: 56 }}>
+                I&apos;ve spent the last couple of years building client relationships, hitting sales targets, and coordinating across borders.
               </p>
-              <div style={{ display: "flex", flexDirection: "column" as const, gap: 52 }}>
+              <div style={{ display: "flex", flexDirection: "column" as const, gap: 48 }}>
                 {soFarItems.map(({ Anim, label, text }) => (
                   <div key={label} style={{ display: "flex", alignItems: "flex-start", gap: 28 }}>
                     <Anim />
@@ -246,24 +275,19 @@ export default function HomePage() {
           </section>
         </div>
 
-        {/* ── PROFILE ── */}
+        {/* PROFILE */}
         <div className="site-wrap">
           <section className="page-section">
             <div className="morph">
               <h2 className="section-heading">Profile.</h2>
               <div style={{ border: "1px solid rgba(255,255,255,0.09)", borderRadius: 4, overflow: "hidden" }}>
-
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "18px 24px", borderBottom: "1px solid rgba(255,255,255,0.09)", background: "rgba(255,255,255,0.025)" }}>
                   <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: "0.12em" }}>SUBJECT PROFILE</span>
                   <div style={{ fontSize: 11, color: "rgba(232,228,220,0.4)", textAlign: "right" as const, lineHeight: 1.6 }}>
-                    <div>CASE FILE: MIM-01</div>
-                    <div>STATUS: OPEN TO WORK</div>
+                    <div>CASE FILE: MIM-01</div><div>STATUS: OPEN TO WORK</div>
                   </div>
                 </div>
-
                 <div className="profile-cols">
-
-                  {/* LEFT */}
                   <div className="profile-col-left">
                     <div style={{ position: "relative" as const, width: "100%", aspectRatio: "3/4", marginBottom: 16 }}>
                       <Image src="/MIM.png" alt="Meshal" fill style={{ objectFit: "cover", borderRadius: 2, border: "1px solid rgba(255,255,255,0.1)" }} />
@@ -285,13 +309,10 @@ export default function HomePage() {
                       <div style={{ fontSize: 14, fontWeight: 700, color: "#e8e4dc", marginBottom: 4 }}>OPEN TO WORK</div>
                       <div style={{ fontSize: 11, color: "rgba(232,228,220,0.4)", lineHeight: 1.6 }}>// CONTRACTS: ENABLED<br />[REMOTE_READY]</div>
                     </div>
-                    <a href="/Mohaiminul_Islam_Meshal_Resume.pdf" download
-                      style={{ display: "block", marginTop: 12, padding: 9, border: "1px solid rgba(255,255,255,0.1)", textAlign: "center" as const, fontSize: 12, color: "rgba(232,228,220,0.45)", textDecoration: "none" }}>
+                    <a href="/Mohaiminul_Islam_Meshal_Resume.pdf" download style={{ display: "block", marginTop: 12, padding: 9, border: "1px solid rgba(255,255,255,0.1)", textAlign: "center" as const, fontSize: 12, color: "rgba(232,228,220,0.45)", textDecoration: "none" }}>
                       ↓ DOWNLOAD CV
                     </a>
                   </div>
-
-                  {/* CENTER */}
                   <div className="profile-col-center">
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
                       <span style={{ fontSize: 11, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)" }}>COMPETENCE_ANALYSIS_REPORT</span>
@@ -316,72 +337,56 @@ export default function HomePage() {
                       <LogEntry tag="[WINSOME COLLEGE]" year="2014–2016" desc="HSC — Science" />
                     </div>
                   </div>
-
-                  {/* RIGHT */}
                   <div className="profile-col-right">
                     <div style={{ fontSize: 11, letterSpacing: "0.1em", color: "rgba(232,228,220,0.3)", textAlign: "center" as const, marginBottom: 16 }}>EQUIPMENT_INVENTORY</div>
                     <div style={{ marginBottom: 20 }}>
                       <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 10 }}>HARD SKILLS</div>
-                      <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
-                        {hardSkills.map((s) => <SkillTag key={s} label={s} />)}
-                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>{hardSkills.map((s) => <SkillTag key={s} label={s} />)}</div>
                     </div>
                     <div>
                       <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "#e05a4b", marginBottom: 10 }}>SOFT SKILLS</div>
-                      <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
-                        {softSkills.map((s) => <SkillTag key={s} label={s} />)}
-                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>{softSkills.map((s) => <SkillTag key={s} label={s} />)}</div>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
           </section>
         </div>
 
-        {/* ── SHOOT ── */}
+        {/* SHOOT */}
         <div className="site-wrap">
           <section className="page-section">
             <div className="morph">
               <h2 className="section-heading">Shoot.</h2>
-              <p className="body-text" style={{ marginBottom: 36 }}>
-                Photography is how I see the world. Street, travel, light.
-              </p>
+              <p className="body-text" style={{ marginBottom: 36 }}>Photography is how I see the world. Street, travel, light.</p>
               <div className="thumb-grid" style={{ marginBottom: 28 }}>
                 {photos.length > 0
-                  ? photos.map((photo) => (
-                      <div key={photo.id} className="thumb-item">
+                  ? photos.map((photo, i) => (
+                      <div key={photo.id} className="thumb-item" onClick={() => openLightbox(i)}>
                         <img src={photo.url} alt={photo.title || "photo"} />
                       </div>
                     ))
-                  : Array.from({ length: 9 }).map((_, i) => (
-                      <div key={i} className="thumb-item" />
-                    ))}
+                  : Array.from({ length: 9 }).map((_, i) => <div key={i} className="thumb-item" />)}
               </div>
-              <Link href="/gallery" className="pill-btn" style={{ fontSize: 15 }}>
-                → view full gallery
-              </Link>
+              <Link href="/gallery" className="pill-btn" style={{ fontSize: 15 }}>→ view full gallery</Link>
             </div>
           </section>
         </div>
 
-        {/* ── SAY HI ── */}
+        {/* SAY HI */}
         <div className="site-wrap">
           <section className="page-section" id="contact">
             <div className="morph">
               <h2 className="section-heading">Say hi.</h2>
-              <p className="body-text" style={{ marginBottom: 44 }}>
-                Always happy to connect — whether it&apos;s work, photography, or just a conversation.
-              </p>
+              <p className="body-text" style={{ marginBottom: 44 }}>Always happy to connect — whether it&apos;s work, photography, or just a conversation.</p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" as const }}>
-                {contactLinks.map(({ label, href }) => (
-                  <a key={label} href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    className="pill-btn">
-                    {label}
-                  </a>
+                {[
+                  { label: "Email", href: "mailto:mohaiminulislammeshal@gmail.com" },
+                  { label: "LinkedIn", href: "https://linkedin.com/in/mohaiminul-islam-meshal" },
+                  { label: "Instagram", href: "#" },
+                ].map(({ label, href }) => (
+                  <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="pill-btn">{label}</a>
                 ))}
               </div>
             </div>
@@ -396,6 +401,60 @@ export default function HomePage() {
         </div>
 
       </div>
+
+      {/* Homepage lightbox */}
+      <AnimatePresence>
+        {currentPhoto && lightboxIndex !== null && (
+          <motion.div
+            style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(0,0,0,0.96)", display: "flex", alignItems: "center", justifyContent: "center" }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={closeLightbox}
+          >
+            <button onClick={closeLightbox} style={{ position: "absolute", top: 20, right: 24, background: "none", border: "none", color: "rgba(232,228,220,0.5)", cursor: "none", padding: 8, zIndex: 10 }}>
+              <X size={22} />
+            </button>
+            <div style={{ position: "absolute", top: 24, left: "50%", transform: "translateX(-50%)", fontSize: 12, color: "rgba(232,228,220,0.3)", letterSpacing: "0.1em" }}>
+              {lightboxIndex + 1} / {photos.length}
+            </div>
+            <button onClick={(e) => { e.stopPropagation(); prev(); }} style={{ position: "absolute", left: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "50%", width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(232,228,220,0.7)", cursor: "none", zIndex: 10 }}>
+              <ChevronLeft size={20} />
+            </button>
+            <button onClick={(e) => { e.stopPropagation(); next(); }} style={{ position: "absolute", right: 20, top: "50%", transform: "translateY(-50%)", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "50%", width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(232,228,220,0.7)", cursor: "none", zIndex: 10 }}>
+              <ChevronRight size={20} />
+            </button>
+            {/* Bottom toolbar */}
+            <div style={{ position: "absolute", bottom: 28, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 8, zIndex: 10 }} onClick={(e) => e.stopPropagation()}>
+              <button onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))} style={{ width: 38, height: 38, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.05)", color: "rgba(232,228,220,0.6)", cursor: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <ZoomOut size={16} />
+              </button>
+              <button onClick={() => setZoom((z) => Math.min(4, z + 0.25))} style={{ width: 38, height: 38, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.05)", color: "rgba(232,228,220,0.6)", cursor: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <ZoomIn size={16} />
+              </button>
+              <a href={currentPhoto.url} download target="_blank" rel="noopener noreferrer" style={{ width: 38, height: 38, borderRadius: "50%", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.05)", color: "rgba(232,228,220,0.6)", cursor: "none", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
+                <Download size={16} />
+              </a>
+            </div>
+            <motion.div
+              initial={{ scale: 0.94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.94, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 22 }}
+              onClick={(e) => e.stopPropagation()}
+              onWheel={onWheel}
+              onMouseDown={onMouseDown}
+              onMouseMove={onMouseMove}
+              onMouseUp={onMouseUp}
+              onMouseLeave={onMouseUp}
+              style={{ overflow: "hidden", maxWidth: "80vw", maxHeight: "80vh", cursor: zoom > 1 ? (dragging ? "grabbing" : "grab") : "none" }}
+            >
+              <img
+                src={currentPhoto.url}
+                alt={currentPhoto.title || ""}
+                style={{ maxWidth: "80vw", maxHeight: "80vh", objectFit: "contain", borderRadius: 2, display: "block", transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`, transition: dragging ? "none" : "transform 0.15s ease", transformOrigin: "center center", userSelect: "none" }}
+                draggable={false}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

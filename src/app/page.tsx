@@ -30,25 +30,11 @@ function LogEntry({ tag, year, desc }: { tag: string; year: string; desc: string
   );
 }
 
-function Dragon() {
+function DragonBg() {
   return (
-    <div className="dragon-wrap">
-      <svg width="120" height="60" viewBox="0 0 120 60" fill="none" opacity="0.045">
-        {/* Body */}
-        <path d="M10,30 Q30,20 50,28 Q70,36 90,25 Q105,18 115,22" stroke="#e8e4dc" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-        {/* Head */}
-        <ellipse cx="115" cy="21" rx="7" ry="5" fill="#e8e4dc" opacity="0.6"/>
-        <path d="M120,18 L128,14 L124,20 Z" fill="#e8e4dc" opacity="0.5"/>
-        {/* Top wing */}
-        <path d="M55,27 Q45,5 35,8 Q50,18 55,27Z" fill="#e8e4dc" opacity="0.5"/>
-        {/* Bottom wing */}
-        <path d="M55,29 Q45,48 35,45 Q50,36 55,29Z" fill="#e8e4dc" opacity="0.4"/>
-        {/* Tail */}
-        <path d="M10,30 Q0,28 -8,35 Q-4,28 -12,22" stroke="#e8e4dc" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-        {/* Legs */}
-        <path d="M70,32 L65,44 L72,44" stroke="#e8e4dc" strokeWidth="1" fill="none" strokeLinecap="round"/>
-        <path d="M85,28 L80,40 L87,40" stroke="#e8e4dc" strokeWidth="1" fill="none" strokeLinecap="round"/>
-      </svg>
+    <div className="dragon-bg">
+      <img src="/dragon.jpg" alt="" aria-hidden="true" />
+      <div className="dragon-eye" />
     </div>
   );
 }
@@ -195,7 +181,7 @@ export default function HomePage() {
   return (
     <>
       {/* Dragon */}
-      <Dragon />
+      <DragonBg />
 
       {/* Say hi overlay */}
       {showMessage && (

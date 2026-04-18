@@ -33,8 +33,10 @@ function LogEntry({ tag, year, desc }: { tag: string; year: string; desc: string
 function DragonBg() {
   return (
     <div className="dragon-bg">
-      <img src="/dragon.jpg" alt="" aria-hidden="true" />
-      <div className="dragon-eye" />
+      <div className="dragon-animate">
+        <img src="/dragon.jpg" alt="" aria-hidden="true" />
+        <div className="dragon-eye" />
+      </div>
     </div>
   );
 }

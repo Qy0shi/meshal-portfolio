@@ -6,7 +6,7 @@ import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const GREETINGS = ["hello.","bonjour.","হ্যালো.","hola.","ciao.","مرحبا.","salut.","hallo."];
+const GREETINGS = ["hello.","bonjour.","hola.","ciao.","مرحبا.","salut.","hallo."];
 
 interface Photo { id: number; url: string; title: string; category: string; }
 
@@ -234,9 +234,9 @@ export default function HomePage() {
               I&apos;m a sales &amp; client experience professional based in Dhaka.
               My passion is to build relationships, close deals, and capture the world through a lens.
             </p>
-            <button onClick={() => setShowMessage(true)} className="pill-btn" style={{ gap: 10 }}>
-              → say hi
-            </button>
+            <button onClick={() => setShowMessage(true)} className="pill-btn" style={{ gap: 10, display: "inline-flex", width: "fit-content" }}>
+  → say hi
+</button>
           </section>
         </div>
 

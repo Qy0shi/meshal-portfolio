@@ -266,14 +266,15 @@ body.no-scroll { overflow: hidden; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: 59% 43%;
   opacity: 0.32;
   display: block;
 }
+
 .dragon-eye {
   position: absolute;
-  top: 66%;
-  left: 62%;
+  top: 43%;
+  left: 59%;
   width: 10px;
   height: 10px;
   border-radius: 50%;
